@@ -9,21 +9,16 @@ router.get("/", function (req, res, next) {
 
 //Download Material
 //from the cid of class, find particular class, get all materials of all courses of that class. find particular material of id
-router.get("/material/:cid/:id", function (req, res, next) {
-  let cid = req.params.cid;
-  let id = req.params.id;
-  let courseArr = [];
-  Class.find({ _id: cid }).exec(function (error, data) {
-    if (error) {
-      throw error;
-    } else {
-      courseArr = JSON.parse(data.Courses);
-      courseArr.forEach((element) => {
-        if (element.Course_id == id) {
-          res.send(element.Materials);
-        }
-      });
-    }
-  });
+
+router.get("/Material", function (req, res, next) {
+  Class.find("Material")
+    .sort("Material")
+    .exec(function (error, results) {
+      if (error) {
+        return next(error);
+      }
+      // Respond with valid data
+      res.json(results);
+    });
 });
 module.exports = router;
