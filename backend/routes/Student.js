@@ -1,4 +1,5 @@
 let express = require("express");
+
 let router = express.Router();
 const Class = require("../models/class");
 
@@ -7,18 +8,22 @@ router.get("/", function (req, res, next) {
   res.send("In Students ROuter");
 });
 
-//Download Material
-//from the cid of class, find particular class, get all materials of all courses of that class. find particular material of id
+router.get("/materials/:id/:fn", (req, res, next) => {
+  let id = req.params.id;
+  let fn = req.params.fn;
 
-router.get("/Material", function (req, res, next) {
-  Class.find("Material")
-    .sort("Material")
-    .exec(function (error, results) {
-      if (error) {
-        return next(error);
-      }
-      // Respond with valid data
-      res.json(results);
-    });
+  let mat = [];
+  Class.findById(id, (err, data) => {
+    if (err) res.send(err);
+    mat = data.Material;
+  });
+
+  for (let i in mat) {
+    if (mat[i] === fn) {
+      res.download(mat[i]);
+      break;
+    }
+  }
 });
+
 module.exports = router;
